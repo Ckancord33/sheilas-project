@@ -1,0 +1,7 @@
+# build artifacts
+*.exe
+*.out
+*.o
+/bin/
+/build/
+main
