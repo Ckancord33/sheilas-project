@@ -4,7 +4,7 @@
 
 using namespace std;
 
-AgentGroup::AgentGroup(int quantity, int opinion1, int opinion2, int obstinacy)
+AgentGroup::AgentGroup(int quantity, int opinion1, int opinion2, double obstinacy)
 {
   group = {quantity, opinion1, opinion2, obstinacy};
 }
@@ -19,12 +19,17 @@ void AgentGroup::showGroup()
   cout << "Esfuerzo para el grupo entero: " << getEffort(get<0>(group)) << endl;
 }
 
-int AgentGroup::getConflict()
+int AgentGroup::getConflict(int n) const
 {
-  return get<0>(group) * pow((get<1>(group) - get<2>(group)), 2);
+  return n * pow((get<1>(group) - get<2>(group)), 2);
 }
 
-int AgentGroup::getEffort(int n)
+int AgentGroup::getEffort (int n) const
 {
   return abs(get<1>(group) - get<2>(group)) * get<3>(group) * n;
+}
+
+int AgentGroup::getQuantity() const
+{
+  return get<0>(group);
 }

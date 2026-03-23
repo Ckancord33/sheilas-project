@@ -7,11 +7,13 @@ using namespace std;
 class AgentGroup
 {
 private:
-    tuple<int, int, int, int> group;
+    tuple<int, int, int, double>group;
 
 public:
-    AgentGroup(int, int, int, int);
+    AgentGroup(int, int, int, double);
+    AgentGroup() = default;
     void showGroup();
-    int getConflict();
-    int getEffort(int);
+    int getConflict(int) const;
+    int getEffort(int) const;
+    int getQuantity() const;
 };
