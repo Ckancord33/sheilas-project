@@ -15,7 +15,7 @@ public:
     SocialNetwork(const std::vector<AgentGroup>& v, int R_max);
 
     vector<int> micBruteForce(bool);
-    vector<int> micGreedy();
+    vector<int> micGreedy(bool);
     vector<int> micDinamycProgramming();
     void showEffortUsed();
 };

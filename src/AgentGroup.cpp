@@ -4,9 +4,9 @@
 
 using namespace std;
 
-AgentGroup::AgentGroup(int quantity, int opinion1, int opinion2, double obstinacy)
+AgentGroup::AgentGroup(int quantity, int opinion1, int opinion2, double obstinacy, int index)
 {
-  group = {quantity, opinion1, opinion2, obstinacy};
+  group = {quantity, opinion1, opinion2, obstinacy, index};
 }
 
 void AgentGroup::showGroup()
@@ -32,4 +32,14 @@ int AgentGroup::getEffort (int n) const
 int AgentGroup::getQuantity() const
 {
   return get<0>(group);
+}
+
+double AgentGroup::getObstinacy() const
+{
+  return get<3>(group);
+}
+
+int AgentGroup::getIndex() const
+{
+  return get<4>(group);
 }

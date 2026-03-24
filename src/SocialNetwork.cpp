@@ -3,6 +3,7 @@
 #include <cmath>
 #include <vector>
 #include <numeric>
+#include <algorithm>
 
 using namespace std;
 
@@ -116,7 +117,7 @@ vector<int> SocialNetwork::micBruteForce(bool debug = false){
     vector<vector<int>> strategies = calcularProductoCartesiano(agentsSet);
     vector<int> effortVec = getEffort(SAG,strategies);
 
-    tuple<int,double> indexMaxEffort = ciMinimum(SAG,effortVec,R_max,strategies,debug);
+    tuple<int,double> indexMaxEffort = ciMinimum(SAG,effortVec,R_max,strategies,false);
 
     if (debug){
         cout << "Esfuerzo de la estrategia: " << effortVec[get<0>(indexMaxEffort)] << endl;
@@ -126,6 +127,74 @@ vector<int> SocialNetwork::micBruteForce(bool debug = false){
     return strategies[get<0>(indexMaxEffort)];
 }
 
-vector<int> SocialNetwork::micGreedy(){
+
+
+vector<AgentGroup> sortRS (const std::vector<AgentGroup>& v){
+    vector<AgentGroup> sortedV = v;
+
+    sort(sortedV.begin(), sortedV.end(), [](const AgentGroup& a, const AgentGroup& b) {
+
+        double ciA = a.getConflict(a.getQuantity()) / a.getObstinacy();
+        double ciB = b.getConflict(b.getQuantity()) / b.getObstinacy();
+
+        return ciA > ciB; 
+    });
+
+    return sortedV;
     
+}
+
+int getAmountpMaximumEffort (const AgentGroup& v, int Rmax){
+    int maxQuantity = 0;
+    for (int i = 0 ; i <= v.getQuantity(); i++){
+        if (v.getEffort(i) <= Rmax){
+            maxQuantity = i;
+        }
+    }
+    return maxQuantity;
+}
+
+void showCIandE (const std::vector<AgentGroup>& v , vector<int> strategie){
+    int newCI = 0;
+    double conflictAct = 0;
+    int efforAct = 0; 
+
+    for (int j = 0; j < v.size(); j++) {
+        conflictAct += v[j].getConflict(v[j].getQuantity() - strategie[j]);
+        efforAct += v[j].getEffort(strategie[j]);
+    }
+    conflictAct /= v.size();
+
+    cout << "Esfuerzo de la estrategia: " << efforAct << endl;
+    cout << "Conflicto interno de la estrategia voraz: " << conflictAct << endl;
+}
+
+int getIndex(const std::vector<AgentGroup>& v, const AgentGroup& valor) {
+    for (int i = 0; i < v.size(); i++) {
+        if (v[i].getIndex() == valor.getIndex()) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+vector<int> SocialNetwork::micGreedy(bool debug){
+    vector<AgentGroup> sortVectRS = sortRS(SAG);
+    vector<int> strategie(sortVectRS.size());
+    int newEffort = 0;
+    int maximumEffort;
+    int indexAgentGroup;
+
+    for (int i = 0 ; i < sortVectRS.size(); i++){
+        maximumEffort = getAmountpMaximumEffort(sortVectRS[i],R_max - newEffort);
+        indexAgentGroup = getIndex(SAG,sortVectRS[i]);
+        strategie[indexAgentGroup] = maximumEffort;
+        newEffort += sortVectRS[i].getEffort(maximumEffort);
+    }
+
+    if(debug){
+        showCIandE(sortVectRS,strategie);
+    }
+
+    return strategie;
 }
