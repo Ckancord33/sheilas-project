@@ -134,8 +134,8 @@ vector<AgentGroup> sortRS (const std::vector<AgentGroup>& v){
 
     sort(sortedV.begin(), sortedV.end(), [](const AgentGroup& a, const AgentGroup& b) {
 
-        double ciA = a.getConflict(a.getQuantity()) / a.getObstinacy();
-        double ciB = b.getConflict(b.getQuantity()) / b.getObstinacy();
+        double ciA = a.getConflict(a.getQuantity()) / a.getEffort(a.getQuantity());
+        double ciB = b.getConflict(b.getQuantity()) / b.getEffort(b.getQuantity());
 
         return ciA > ciB; 
     });
@@ -193,7 +193,7 @@ vector<int> SocialNetwork::micGreedy(bool debug){
     }
 
     if(debug){
-        showCIandE(sortVectRS,strategie);
+        showCIandE(SAG, strategie);
     }
 
     return strategie;
